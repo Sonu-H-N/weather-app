@@ -4,28 +4,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Advanced Weather App</title>
+  <title>Weather App</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="card">
+
   <h2>🌤 Weather App</h2>
 
   <div class="search">
-    <input type="text" id="city" placeholder="Enter city">
+    <input type="text" id="city" placeholder="Enter city name">
     <button onclick="getWeather()">Search</button>
   </div>
 
-  <img id="icon" src="" alt="weather icon">
-
   <h1 id="temp">--°C</h1>
   <h3 id="cityName">City</h3>
-  <p id="desc">Description</p>
+  <p id="desc">Weather description</p>
 
   <div class="details">
-    <p>💧 <span id="humidity">--</span>%</p>
-    <p>🌬 <span id="wind">--</span> km/h</p>
+    <div>
+      <p>💧 Humidity</p>
+      <span id="humidity">--</span>%
+    </div>
+    <div>
+      <p>🌬 Wind</p>
+      <span id="wind">--</span> km/h
+    </div>
   </div>
 
 </div>

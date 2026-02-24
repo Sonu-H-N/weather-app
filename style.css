@@ -6,12 +6,6 @@ display: flex;
 justify-content: center;
 align-items: center;
 background: linear-gradient(135deg, #a8c0ff, #cfd9df);
-animation: bgMove 10s infinite alternate;
-}
-
-@keyframes bgMove {
-from { background-position: left; }
-to { background-position: right; }
 }
 
 .card {
@@ -23,16 +17,6 @@ text-align: center;
 color: #333;
 width: 320px;
 box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-transition: 0.3s;
-}
-
-.card:hover {
-transform: translateY(-5px);
-}
-
-h2 {
-margin-bottom: 10px;
-color: #444;
 }
 
 .search {
@@ -55,28 +39,6 @@ border: none;
 background: #6c8cff;
 color: white;
 cursor: pointer;
-transition: 0.3s;
-}
-
-.search button:hover {
-background: #4f6df5;
-}
-
-#icon {
-width: 100px;
-margin-top: 10px;
-animation: float 2s infinite ease-in-out;
-}
-
-@keyframes float {
-0%,100% { transform: translateY(0); }
-50% { transform: translateY(-8px); }
-}
-
-#temp {
-font-size: 42px;
-margin: 10px 0;
-color: #222;
 }
 
 .details {
@@ -84,5 +46,4 @@ display: flex;
 justify-content: space-around;
 margin-top: 15px;
 font-size: 14px;
-color: #555;
 }
