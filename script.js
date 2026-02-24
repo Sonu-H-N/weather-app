@@ -1,3 +1,5 @@
+document.querySelector("button").addEventListener("click", getWeather);
+
 async function getWeather() {
 
 const city = document.getElementById("city").value;
@@ -10,7 +12,10 @@ return;
 try {
 
 ```
-const response = await fetch(`https://wttr.in/${city}?format=j1`);
+const response = await fetch(
+  "https://api.allorigins.win/raw?url=https://wttr.in/" + city + "?format=j1"
+);
+
 const data = await response.json();
 
 const current = data.current_condition[0];
@@ -31,8 +36,12 @@ document.getElementById("wind").innerText =
 ```
 
 } catch (error) {
-alert("Error fetching weather");
+
+```
+alert("Error loading weather");
 console.log(error);
+```
+
 }
 
 }
