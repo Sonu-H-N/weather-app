@@ -1,22 +1,42 @@
 body {
 margin: 0;
-font-family: Arial, sans-serif;
+font-family: 'Segoe UI', sans-serif;
 height: 100vh;
 display: flex;
 justify-content: center;
 align-items: center;
-background: linear-gradient(135deg, #1e3c72, #2a5298);
+background: linear-gradient(135deg, #a8c0ff, #cfd9df);
+animation: bgMove 10s infinite alternate;
+}
+
+@keyframes bgMove {
+from { background-position: left; }
+to { background-position: right; }
 }
 
 .card {
+background: rgba(255, 255, 255, 0.6);
 backdrop-filter: blur(15px);
-background: rgba(255,255,255,0.15);
 padding: 30px;
 border-radius: 20px;
 text-align: center;
-color: white;
+color: #333;
 width: 320px;
-box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+transition: 0.3s;
+}
+
+.card:hover {
+transform: translateY(-5px);
+}
+
+h2 {
+margin-bottom: 10px;
+color: #444;
+}
+
+.search {
+margin: 15px 0;
 }
 
 .search input {
@@ -24,23 +44,45 @@ padding: 10px;
 border-radius: 10px;
 border: none;
 width: 65%;
+background: #f1f5f9;
+outline: none;
 }
 
 .search button {
 padding: 10px;
 border-radius: 10px;
 border: none;
-background: #00c6ff;
+background: #6c8cff;
 color: white;
 cursor: pointer;
+transition: 0.3s;
+}
+
+.search button:hover {
+background: #4f6df5;
 }
 
 #icon {
 width: 100px;
+margin-top: 10px;
+animation: float 2s infinite ease-in-out;
+}
+
+@keyframes float {
+0%,100% { transform: translateY(0); }
+50% { transform: translateY(-8px); }
+}
+
+#temp {
+font-size: 42px;
+margin: 10px 0;
+color: #222;
 }
 
 .details {
 display: flex;
 justify-content: space-around;
 margin-top: 15px;
+font-size: 14px;
+color: #555;
 }
