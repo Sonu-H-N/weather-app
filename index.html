@@ -1,34 +1,25 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Weather App</title>
+  <title>Simple Weather App</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="card">
 
-  <h2>🌤 Weather App</h2>
+  <h2>Weather App</h2>
 
-  <div class="search">
-    <input type="text" id="city" placeholder="Enter city name">
-    <button id="searchBtn">Search</button>
-  </div>
-
-<button id="locationBtn" class="location-btn">📍 Use My Location</button>
-
-  <div id="loading" class="loading">Loading...</div>
-
-  <img id="icon" src="" alt="">
+  <input type="text" id="city" placeholder="Enter city name">
+  <button onclick="getWeather()">Search</button>
 
   <h1 id="temp">--°C</h1>
   <h3 id="cityName">City</h3>
-  <p id="desc">Weather description</p>
 
-  <div class="details">
-    <div>
-      <p>💧 Humidity</p>
-      <span id="humidit
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
