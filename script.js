@@ -1,13 +1,25 @@
-document.querySelector("button").addEventListener("click", getWeather);
+const button = document.getElementById("searchBtn");
+const input = document.getElementById("city");
+const loading = document.getElementById("loading");
+
+button.addEventListener("click", getWeather);
+
+input.addEventListener("keypress", function(e) {
+if (e.key === "Enter") {
+getWeather();
+}
+});
 
 async function getWeather() {
 
-const city = document.getElementById("city").value;
+const city = input.value;
 
 if (!city) {
 alert("Please enter city name");
 return;
 }
+
+loading.style.display = "block";
 
 try {
 
@@ -33,6 +45,9 @@ document.getElementById("humidity").innerText =
 
 document.getElementById("wind").innerText =
   current.windspeedKmph;
+
+document.getElementById("icon").src =
+  "https://openweathermap.org/img/wn/10d@2x.png";
 ```
 
 } catch (error) {
@@ -44,4 +59,5 @@ console.log(error);
 
 }
 
+loading.style.display = "none";
 }

@@ -3,6 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Weather App</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -14,8 +15,12 @@
 
   <div class="search">
     <input type="text" id="city" placeholder="Enter city name">
-    <button onclick="getWeather()">Search</button>
+    <button id="searchBtn">Search</button>
   </div>
+
+  <div id="loading" class="loading">Loading...</div>
+
+  <img id="icon" src="" alt="">
 
   <h1 id="temp">--°C</h1>
   <h3 id="cityName">City</h3>
@@ -38,5 +43,3 @@
 
 </body>
 </html>
-
-
