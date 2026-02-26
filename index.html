@@ -1,25 +1,33 @@
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
 <head>
-  <title>Simple Weather App</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="card">
+<div class="container">
+    <h1>🌤 Weather App</h1>
 
-  <h2>Weather App</h2>
+    <div class="search-box">
+        <input type="text" id="city" placeholder="Enter city name">
+        <button onclick="getWeather()">Search</button>
+    </div>
 
-  <input type="text" id="city" placeholder="Enter city name">
-  <button onclick="getWeather()">Search</button>
+    <div class="weather-card" id="weather">
+        <h2 id="cityName"></h2>
+        <img id="icon" src="" alt="">
+        <p id="temp"></p>
+        <p id="desc"></p>
+        <p id="humidity"></p>
+        <p id="wind"></p>
+    </div>
 
-  <h1 id="temp">--°C</h1>
-  <h3 id="cityName">City</h3>
-
+    <button class="toggle" onclick="toggleTheme()">🌙 Toggle Theme</button>
 </div>
 
 <script src="script.js"></script>
-
 </body>
 </html>
