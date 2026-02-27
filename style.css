@@ -1,115 +1,57 @@
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #4facfe, #00f2fe);
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+margin:0;
+font-family: Arial, sans-serif;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+transition:0.4s;
+}
+
+body.light {
+background: linear-gradient(135deg,#4facfe,#00f2fe);
+color:white;
+}
+
+body.dark {
+background: linear-gradient(135deg,#141e30,#243b55);
+color:white;
 }
 
 .container {
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-    padding: 30px;
-    border-radius: 20px;
-    text-align: center;
-    color: white;
-    width: 320px;
+background: rgba(255,255,255,0.2);
+padding:20px;
+border-radius:20px;
+text-align:center;
+width:320px;
+backdrop-filter: blur(10px);
+position:relative;
 }
 
-.search-box {
-    display: flex;
-    margin-bottom: 20px;
-}
-
-.search-box input {
-    flex: 1;
-    padding: 10px;
-    border: none;
-    border-radius: 10px 0 0 10px;
-    outline: none;
-}
-
-.search-box button {
-    padding: 10px;
-    border: none;
-    background: #ff9800;
-    color: white;
-    border-radius: 0 10px 10px 0;
-    cursor: pointer;
-}
-
-.weather-card img {
-    width: 80px;
-}
-
-.details {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 15px;
-}
-.weather-card p {
-    font-size: 18px;
-}
-
-button:hover {
-    opacity: 0.8;
-    transform: scale(1.05);
-    transition: 0.3s;
-    /* Theme Button */
 .theme-btn {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 10px;
-    cursor: pointer;
-    background: rgba(255,255,255,0.3);
-    color: white;
+position:absolute;
+top:10px;
+right:10px;
+border:none;
+padding:6px 10px;
+border-radius:8px;
+cursor:pointer;
 }
 
-/* Dark Mode */
-body.dark {
-    background: linear-gradient(135deg, #141e30, #243b55);
+.weather-card {
+margin-top:15px;
 }
 
-/* Light Mode */
-body.light {
-    background: linear-gradient(135deg, #4facfe, #00f2fe);
-}
-
-/* Smooth transition */
-body {
-    transition: 0.4s;
-}
-}
-.weather-card p {
-    font-size: 18px;
-}
-
-button:hover {
-    opacity: 0.8;
-    transform: scale(1.05);
-    transition: 0.3s;
-}
 .forecast {
-    display: flex;
-    overflow-x: auto;
-    margin-top: 20px;
-    gap: 10px;
+display:flex;
+gap:10px;
+margin-top:20px;
+overflow-x:auto;
 }
 
 .forecast-card {
-    min-width: 100px;
-    background: rgba(255,255,255,0.2);
-    padding: 10px;
-    border-radius: 15px;
-    text-align: center;
-    color: white;
-}
-
-.forecast-card img {
-    width: 50px;
+background: rgba(255,255,255,0.2);
+padding:10px;
+border-radius:10px;
+min-width:70px;
 }
