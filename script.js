@@ -1,41 +1,21 @@
 const apiKey = "YOUR_API_KEY_HERE";
 
-const cityInput = document.getElementById("cityInput");
-const weatherCard = document.getElementById("weatherCard");
-
-cityInput.addEventListener("keypress", function (e) {
-    if (e.key === "Enter") {
-        getWeather();
-    }
-});
+const forecastContainer = document.getElementById("forecast");
 
 async function getWeather(cityName) {
-    const city = cityName || cityInput.value;
+    const city = cityName || document.getElementById("cityInput").value;
 
-    if (city === "") {
-        showError("Please enter a city");
-        return;
-    }
-
-    showLoader();
+    if (city === "") return;
 
     const url =
         `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`;
 
-    try {
-        const response = await fetch(url);
-        const data = await response.json();
+    const response = await fetch(url);
+    const data = await response.json();
 
-        if (data.cod !== 200) {
-            showError("City not found");
-            return;
-        }
+    displayWeather(data);
 
-        displayWeather(data);
-
-    } catch (error) {
-        showError("Error fetching weather");
-    }
+    getForecast(data.coord.lat, data.coord.lon);
 }
 
 function displayWeather(data) {
@@ -48,26 +28,44 @@ function displayWeather(data) {
     const icon = data.weather[0].icon;
     document.getElementById("weatherIcon").src =
         `https://openweathermap.org/img/wn/${icon}@2x.png`;
-
-    hideLoader();
 }
 
-function showLoader() {
-    weatherCard.innerHTML = "<p>Loading...</p>";
+// 📅 Forecast Function
+async function getForecast(lat, lon) {
+    const url =
+        `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`;
+
+    const response = await fetch(url);
+    const data = await response.json();
+
+    displayForecast(data.daily);
 }
 
-function showError(msg) {
-    weatherCard.innerHTML = `<p style="color:red">${msg}</p>`;
+function displayForecast(days) {
+    forecastContainer.innerHTML = "";
+
+    days.slice(1, 8).forEach(day => {
+
+        const date = new Date(day.dt * 1000);
+        const dayName = date.toLocaleDateString("en-US", { weekday: "short" });
+
+        const card = `
+            <div class="forecast-card">
+                <h4>${dayName}</h4>
+                <img src="https://openweathermap.org/img/wn/${day.weather[0].icon}.png">
+                <p>${Math.round(day.temp.day)}°C</p>
+            </div>
+        `;
+
+        forecastContainer.innerHTML += card;
+    });
 }
 
-function hideLoader() {
-    // Nothing needed here now
-}
-
-// 📍 Auto Detect Location
+// 📍 Auto Location
 window.onload = () => {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(async (pos) => {
+
             const lat = pos.coords.latitude;
             const lon = pos.coords.longitude;
 
@@ -78,6 +76,8 @@ window.onload = () => {
             const data = await response.json();
 
             displayWeather(data);
+            getForecast(lat, lon);
+
         });
     }
 };
