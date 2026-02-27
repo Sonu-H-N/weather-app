@@ -81,3 +81,25 @@ window.onload = () => {
         });
     }
 };
+const toggleBtn = document.getElementById("themeToggle");
+
+// Load saved theme
+if (localStorage.getItem("theme") === "dark") {
+    document.body.classList.add("dark");
+    toggleBtn.innerText = "☀️";
+} else {
+    document.body.classList.add("light");
+}
+
+toggleBtn.onclick = () => {
+    document.body.classList.toggle("dark");
+    document.body.classList.toggle("light");
+
+    if (document.body.classList.contains("dark")) {
+        localStorage.setItem("theme", "dark");
+        toggleBtn.innerText = "☀️";
+    } else {
+        localStorage.setItem("theme", "light");
+        toggleBtn.innerText = "🌙";
+    }
+};

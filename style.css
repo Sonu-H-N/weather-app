@@ -57,6 +57,33 @@ button:hover {
     opacity: 0.8;
     transform: scale(1.05);
     transition: 0.3s;
+    /* Theme Button */
+.theme-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    background: rgba(255,255,255,0.3);
+    color: white;
+}
+
+/* Dark Mode */
+body.dark {
+    background: linear-gradient(135deg, #141e30, #243b55);
+}
+
+/* Light Mode */
+body.light {
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+}
+
+/* Smooth transition */
+body {
+    transition: 0.4s;
+}
 }
 .weather-card p {
     font-size: 18px;
