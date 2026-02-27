@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WEATHER APP</title>
+    <title>Weather App</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,20 +12,21 @@
     <h1>🌤 Weather App</h1>
 
     <div class="search-box">
-        <input type="text" id="city" placeholder="Enter city name">
+        <input type="text" id="cityInput" placeholder="Enter city name">
         <button onclick="getWeather()">Search</button>
     </div>
 
-    <div class="weather-card" id="weather">
-        <h2 id="cityName"></h2>
-        <img id="icon" src="" alt="">
-        <p id="temp"></p>
-        <p id="desc"></p>
-        <p id="humidity"></p>
-        <p id="wind"></p>
-    </div>
+    <div class="weather-card" id="weatherCard">
+        <h2 id="cityName">City</h2>
+        <img id="weatherIcon" src="" alt="">
+        <h3 id="temperature">--°C</h3>
+        <p id="description">Weather description</p>
 
-    <button class="toggle" onclick="toggleTheme()">🌙 Toggle Theme</button>
+        <div class="details">
+            <span>💧 Humidity: <b id="humidity">--%</b></span>
+            <span>🌬 Wind: <b id="wind">-- km/h</b></span>
+        </div>
+    </div>
 </div>
 
 <script src="script.js"></script>
