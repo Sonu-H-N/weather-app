@@ -109,7 +109,7 @@ toggleBtn.innerText="☀️";
 }else{
 toggleBtn.innerText="🌙";
 }
-
+updateThemeEffects();
 };
 // ⭐ Night Stars System
 
@@ -183,3 +183,54 @@ hideStars();
 }
 
 checkDayNight();
+// ⭐ Create Stars Once
+
+function createStars(){
+
+const starsContainer = document.getElementById("stars");
+if(!starsContainer) return;
+
+if(starsContainer.children.length > 0) return;
+
+for(let i=0;i<80;i++){
+
+const star = document.createElement("div");
+star.className = "star";
+
+star.style.top = Math.random()*100 + "vh";
+star.style.left = Math.random()*100 + "vw";
+
+starsContainer.appendChild(star);
+
+}
+
+}
+
+createStars();
+
+
+// 🌙 Theme Effects Controller
+
+function updateThemeEffects(){
+
+const isDark = document.body.classList.contains("night");
+
+const sun = document.getElementById("sun");
+const stars = document.getElementById("stars");
+
+if(!sun || !stars) return;
+
+if(isDark){
+
+stars.style.opacity = "1";
+sun.style.opacity = "0";
+
+}else{
+
+stars.style.opacity = "0";
+sun.style.opacity = "1";
+
+}
+
+}
+updateThemeEffects();

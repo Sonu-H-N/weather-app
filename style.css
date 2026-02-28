@@ -370,3 +370,48 @@ animation:twinkle 2s infinite alternate;
 from{opacity:0.2;}
 to{opacity:1;}
 }
+/* ☀️ Sun */
+
+.sun{
+position:fixed;
+top:60px;
+right:80px;
+width:120px;
+height:120px;
+border-radius:50%;
+background:radial-gradient(circle,#ffd200,#f7971e);
+box-shadow:0 0 60px rgba(255,210,0,0.8);
+opacity:0;
+transition:0.4s;
+pointer-events:none;
+z-index:-1;
+}
+
+
+/* ⭐ Stars */
+
+.stars{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+pointer-events:none;
+opacity:0;
+transition:0.4s;
+z-index:-1;
+}
+
+.star{
+position:absolute;
+width:2px;
+height:2px;
+background:white;
+border-radius:50%;
+animation:twinkle 2s infinite alternate;
+}
+
+@keyframes twinkle{
+from{opacity:0.2;}
+to{opacity:1;}
+}
