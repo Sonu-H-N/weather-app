@@ -31,7 +31,17 @@ generateForecast();
 // 🎨 Background Change
 
 function changeBackground(condition){
+sif(condition === "Sunny"){
 
+showSun();
+hideStars();
+
+}
+else{
+
+hideSun();
+
+}
 if(condition === "Rainy"){
 document.body.style.background =
 "linear-gradient(135deg,#667db6,#0082c8)";
@@ -101,3 +111,75 @@ toggleBtn.innerText="🌙";
 }
 
 };
+// ⭐ Night Stars System
+
+function showStars(){
+
+const starsContainer = document.getElementById("stars");
+if(!starsContainer) return;
+
+starsContainer.style.opacity = "1";
+
+if(starsContainer.children.length > 0) return;
+
+for(let i=0;i<80;i++){
+
+const star = document.createElement("div");
+star.className = "star";
+
+star.style.top = Math.random()*100 + "vh";
+star.style.left = Math.random()*100 + "vw";
+
+starsContainer.appendChild(star);
+
+}
+
+}
+
+function hideStars(){
+
+const starsContainer = document.getElementById("stars");
+if(!starsContainer) return;
+
+starsContainer.style.opacity = "0";
+
+}
+
+
+// ☀️ Sun System
+
+function showSun(){
+
+const sun = document.getElementById("sun");
+if(!sun) return;
+
+sun.style.opacity = "1";
+
+}
+
+function hideSun(){
+
+const sun = document.getElementById("sun");
+if(!sun) return;
+
+sun.style.opacity = "0";
+
+}
+
+
+// 🌙 Auto Night Detection
+
+function checkDayNight(){
+
+const hour = new Date().getHours();
+
+if(hour >= 19 || hour <= 6){
+showStars();
+hideSun();
+}else{
+hideStars();
+}
+
+}
+
+checkDayNight();
