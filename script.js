@@ -24,7 +24,7 @@ document.getElementById("description").innerText = desc;
 changeBackground(desc);
 
 generateForecast();
-
+updateChart();
 }
 
 
@@ -234,3 +234,51 @@ sun.style.opacity = "1";
 
 }
 updateThemeEffects();
+// 📊 Temperature Chart System
+
+let tempChart;
+
+function updateChart(){
+
+const ctx = document.getElementById("tempChart");
+if(!ctx) return;
+
+// Generate fake weekly temps
+const temps = [];
+
+for(let i=0;i<7;i++){
+temps.push(Math.floor(Math.random()*10)+25);
+}
+
+const labels = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+
+if(tempChart){
+tempChart.destroy();
+}
+
+tempChart = new Chart(ctx, {
+type: "line",
+data: {
+labels: labels,
+datasets: [{
+label: "Temperature °C",
+data: temps,
+fill: true,
+tension: 0.4
+}]
+},
+options: {
+plugins:{
+legend:{
+display:false
+}
+},
+scales:{
+y:{
+beginAtZero:false
+}
+}
+}
+});
+
+}

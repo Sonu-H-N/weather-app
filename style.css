@@ -415,3 +415,9 @@ animation:twinkle 2s infinite alternate;
 from{opacity:0.2;}
 to{opacity:1;}
 }
+#tempChart{
+margin-top:20px;
+background:rgba(255,255,255,0.15);
+border-radius:15px;
+padding:10px;
+}
