@@ -421,3 +421,56 @@ background:rgba(255,255,255,0.15);
 border-radius:15px;
 padding:10px;
 }
+/* ☀️ Smiling Sun Face */
+
+.sun{
+position:fixed;
+top:60px;
+right:80px;
+width:120px;
+height:120px;
+border-radius:50%;
+background:radial-gradient(circle,#ffd200,#f7971e);
+box-shadow:0 0 60px rgba(255,210,0,0.8);
+opacity:0;
+transition:0.4s;
+pointer-events:none;
+z-index:-1;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+.sun-face{
+position:relative;
+width:60px;
+height:60px;
+}
+
+.eye{
+position:absolute;
+width:10px;
+height:10px;
+background:#333;
+border-radius:50%;
+top:20px;
+}
+
+.left-eye{
+left:10px;
+}
+
+.right-eye{
+right:10px;
+}
+
+.smile{
+position:absolute;
+width:30px;
+height:15px;
+border-bottom:4px solid #333;
+border-radius:0 0 30px 30px;
+bottom:10px;
+left:50%;
+transform:translateX(-50%);
+}
