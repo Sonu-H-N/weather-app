@@ -33,10 +33,18 @@ generateForecast();
 function changeBackground(condition){
 
 if(condition === "Rainy"){
+
 document.body.style.background =
 "linear-gradient(135deg,#667db6,#0082c8)";
+
+startRain();
+
 }
-else if(condition === "Cloudy"){
+else{
+
+stopRain();
+
+if(condition === "Cloudy"){
 document.body.style.background =
 "linear-gradient(135deg,#bdc3c7,#2c3e50)";
 }
@@ -47,6 +55,10 @@ document.body.style.background =
 else{
 document.body.style.background =
 "linear-gradient(135deg,#4facfe,#00f2fe)";
+}
+
+}
+
 }
 
 }
@@ -101,3 +113,48 @@ toggleBtn.innerText="🌙";
 }
 
 };
+function startRain(){
+
+const rain = document.getElementById("rain");
+rain.style.display = "block";
+rain.innerHTML = "";
+
+for(let i=0;i<120;i++){
+
+const drop = document.createElement("div");
+drop.classList.add("drop");
+
+drop.style.left = Math.random()*100 + "vw";
+drop.style.animationDuration = (0.5 + Math.random()*0.5) + "s";
+
+rain.appendChild(drop);
+
+}
+
+startThunder();
+
+}
+
+
+function stopRain(){
+const rain = document.getElementById("rain");
+rain.style.display = "none";
+rain.innerHTML = "";
+}
+
+
+function startThunder(){
+
+setInterval(()=>{
+
+const lightning = document.getElementById("lightning");
+
+lightning.classList.add("flash");
+
+setTimeout(()=>{
+lightning.classList.remove("flash");
+},300);
+
+},4000);
+
+}
