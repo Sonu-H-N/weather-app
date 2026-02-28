@@ -31,14 +31,15 @@ generateForecast();
 // 🎨 Background Change
 
 function changeBackground(condition){
-sif(condition === "Sunny"){
+if(condition === "Sunny")
+{
 
-showSun();
-hideStars();
-
+ showSun();
+ hideStars();
+}
 else{
 
-hideSun();
+ hideSun();
 
 }
 if(condition === "Rainy"){
