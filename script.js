@@ -36,7 +36,6 @@ sif(condition === "Sunny"){
 showSun();
 hideStars();
 
-}
 else{
 
 hideSun();
