@@ -506,3 +506,26 @@ animation-delay:0s;
 right:10px;
 animation-delay:0.2s;
 }
+/* 🌈 Rainbow */
+
+.rainbow{
+position:fixed;
+bottom:-100px;
+left:50%;
+transform:translateX(-50%);
+width:300px;
+height:150px;
+border-radius:150px 150px 0 0;
+background:
+linear-gradient(red,orange,yellow,green,blue,indigo,violet);
+opacity:0;
+transition:1s;
+pointer-events:none;
+z-index:-1;
+filter:blur(2px);
+}
+
+.rainbow.show{
+opacity:0.9;
+bottom:50px;
+}

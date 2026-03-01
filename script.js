@@ -31,6 +31,7 @@ updateChart();
 // 🎨 Background Change
 
 function changeBackground(condition){
+    handleRainState(condition);
 if(condition === "Sunny")
 {
 
@@ -280,5 +281,59 @@ beginAtZero:false
 }
 }
 });
+
+}
+// 🌈 Rainbow System
+
+function showRainbow(){
+
+const rainbow = document.getElementById("rainbow");
+if(!rainbow) return;
+
+rainbow.classList.add("show");
+
+// hide after few seconds
+setTimeout(()=>{
+rainbow.classList.remove("show");
+},6000);
+
+}
+// 🌈 Rainbow After Rain Logic
+
+let wasRaining = false;
+
+function handleRainState(condition){
+
+condition = condition.toLowerCase();
+
+const isRaining =
+condition.includes("rain") ||
+condition.includes("storm");
+
+if(isRaining){
+wasRaining = true;
+}else{
+
+if(wasRaining){
+showRainbow();
+}
+
+wasRaining = false;
+
+}
+
+}
+
+
+function showRainbow(){
+
+const rainbow = document.getElementById("rainbow");
+if(!rainbow) return;
+
+rainbow.classList.add("show");
+
+setTimeout(()=>{
+rainbow.classList.remove("show");
+},6000);
 
 }
