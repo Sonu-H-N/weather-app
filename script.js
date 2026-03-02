@@ -338,3 +338,6 @@ rainbow.classList.remove("show");
 },6000);
 
 }
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js");
+}
