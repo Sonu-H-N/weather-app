@@ -218,6 +218,7 @@ const isDark = document.body.classList.contains("night");
 
 const sun = document.getElementById("sun");
 const stars = document.getElementById("stars");
+const moon = document.getElementById("moon");
 
 if(!sun || !stars) return;
 
