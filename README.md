@@ -48,7 +48,7 @@ A modern animated weather application built using **HTML, CSS, and JavaScript** 
 
 ## 🌍 Live Demo
 
-https://your-username.github.io/weather-app
+https://Sonu H-N.github.io/weather-app
 
 ## 👨‍💻 Author
 

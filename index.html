@@ -1,54 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#4facfe">
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Weather Pro</title>
+
 <link rel="stylesheet" href="style.css">
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#4facfe">
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
+
 <body>
-    <div class="sky-effects">
-  <div class="sun" id="sun">
-  <div class="sun-face">
-    <div class="eye left-eye"></div>
-    <div class="eye right-eye"></div>
-    <div class="smile"></div>
-    <div class="rainbow" id="rainbow"></div>
-  </div>
-</div>
-  <div class="stars" id="stars"></div>
-</div>
-    <div class="clouds">
-  <div class="cloud cloud1"></div>
-  <div class="cloud cloud2"></div>
-  <div class="cloud cloud3"></div>
-</div>
+
+<!-- Sky Effects -->
 <div class="sky-effects">
-  <div class="sun" id="sun"></div>
-  <div class="stars" id="stars"></div>
-  <div class="moon" id="moon">🌙</div>
+<div class="sun" id="sun">
+<div class="sun-face">
+<div class="eye left-eye"></div>
+<div class="eye right-eye"></div>
+<div class="smile"></div>
 </div>
-<div class="container">
+</div>
 
-<button id="themeToggle" class="theme-btn">🌙</button>
+<div class="stars" id="stars"></div>
+<div class="moon" id="moon">🌙</div>
+</div>
 
-<h1>🌤 Weather Pro</h1>
+<div class="clouds">
+<div class="cloud cloud1"></div>
+<div class="cloud cloud2"></div>
+<div class="cloud cloud3"></div>
+</div>
 
-<input type="text" id="cityInput" placeholder="Enter city...">
+<div class="rain" id="rain"></div>
+<div class="lightning" id="lightning"></div>
+<div class="rainbow" id="rainbow"></div>
+
+<!-- Main Card -->
+
+<div class="app">
+
+<header>
+
+<h1>Weather Pro</h1>
+
+<button id="themeToggle">🌙</button>
+
+</header>
+
+<!-- Search -->
+
+<div class="search-box">
+
+<input id="cityInput" placeholder="Search city">
+
+<button onclick="handleSearch()">Search</button>
+
+</div>
+
+<!-- Weather -->
 
 <div class="weather-card">
-<h2 id="cityName">--</h2>
-<h3 id="temperature">--°C</h3>
-<p id="description">Weather</p>
+
+<h2 id="cityName">City</h2>
+
+<div class="temp" id="temperature">--°C</div>
+
+<p id="description">Weather condition</p>
+
 </div>
 
+<!-- Forecast -->
+
 <div class="forecast" id="forecast"></div>
-<canvas id="tempChart" height="120"></canvas>
+
+<!-- Chart -->
+
+<canvas id="tempChart"></canvas>
+
 </div>
 
 <script src="script.js"></script>
+
 </body>
 </html>
