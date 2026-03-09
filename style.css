@@ -163,3 +163,15 @@ animation:twinkle 2s infinite alternate;
 from{opacity:0.3;}
 to{opacity:1;}
 }
+.search-box button:last-child{
+
+background:#ff6b6b;
+color:white;
+
+}
+
+.search-box button:last-child:hover{
+
+background:#ff4d4d;
+
+}
