@@ -22,3 +22,19 @@ self.addEventListener("fetch", event => {
     })
   );
 });
+function showNotification(message){
+  showNotification("Weather updated for " + city);
+
+const note=document.getElementById("notification");
+
+note.innerText=message;
+
+note.classList.add("show");
+
+setTimeout(()=>{
+
+note.classList.remove("show");
+
+},3000);
+
+}
