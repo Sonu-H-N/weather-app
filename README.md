@@ -52,4 +52,4 @@ https://Sonu H-N.github.io/weather-app
 
 ## 👨‍💻 Author
 
-Your Name
+Sonu H N
