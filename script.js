@@ -41,3 +41,42 @@ function hideLoader(){
 document.getElementById("loader").style.display="none";
 
 }
+// 🌌 Shooting Star System
+
+let shootingInterval;
+
+function startShootingStars(){
+
+const container=document.getElementById("shootingStars");
+if(!container) return;
+
+if(shootingInterval) return;
+
+shootingInterval=setInterval(()=>{
+
+const star=document.createElement("div");
+star.className="shooting-star";
+
+star.style.top=Math.random()*50+"vh";
+star.style.left=Math.random()*100+"vw";
+
+container.appendChild(star);
+
+setTimeout(()=>{
+star.remove();
+},2000);
+
+},3000);
+
+}
+
+function stopShootingStars(){
+
+if(shootingInterval){
+clearInterval(shootingInterval);
+shootingInterval=null;
+}
+
+}
+startShootingStars();
+stopShootingStars();
