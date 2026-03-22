@@ -256,3 +256,24 @@ opacity:0;
 transform:translate(300px,300px) rotate(45deg);
 }
 }
+.favorites{
+margin:15px 0;
+}
+
+#favList{
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+}
+
+.fav-item{
+background:rgba(255,255,255,0.2);
+padding:6px 10px;
+border-radius:8px;
+cursor:pointer;
+font-size:12px;
+}
+
+.fav-item:hover{
+background:rgba(255,255,255,0.4);
+}

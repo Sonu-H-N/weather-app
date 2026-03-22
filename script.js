@@ -80,3 +80,48 @@ shootingInterval=null;
 }
 startShootingStars();
 stopShootingStars();
+// ⭐ Favorites System
+
+function addFavorite(){
+
+const city=document.getElementById("cityInput").value;
+
+if(!city) return;
+
+let favs=JSON.parse(localStorage.getItem("favorites")) || [];
+
+if(!favs.includes(city)){
+favs.push(city);
+localStorage.setItem("favorites", JSON.stringify(favs));
+}
+
+renderFavorites();
+
+}
+
+
+function renderFavorites(){
+
+const container=document.getElementById("favList");
+
+let favs=JSON.parse(localStorage.getItem("favorites")) || [];
+
+container.innerHTML="";
+
+favs.forEach(city=>{
+
+const div=document.createElement("div");
+div.className="fav-item";
+div.innerText=city;
+
+div.onclick=()=>updateWeather(city);
+
+container.appendChild(div);
+
+});
+
+}
+
+
+// Load favorites on start
+window.addEventListener("load", renderFavorites);
