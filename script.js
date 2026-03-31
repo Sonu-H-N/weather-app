@@ -3,6 +3,7 @@ function handleSearch(){
 const city=document.getElementById("cityInput").value;
 
 updateWeather(city);
+addToHistory(city);
 
 }
 function startVoiceSearch(){
@@ -125,3 +126,50 @@ container.appendChild(div);
 
 // Load favorites on start
 window.addEventListener("load", renderFavorites);
+// 🕒 Search History System
+
+function addToHistory(city){
+
+let history = JSON.parse(localStorage.getItem("history")) || [];
+
+// remove duplicate
+history = history.filter(c => c !== city);
+
+// add to top
+history.unshift(city);
+
+// limit to 5 items
+history = history.slice(0,5);
+
+localStorage.setItem("history", JSON.stringify(history));
+
+renderHistory();
+
+}
+
+
+function renderHistory(){
+
+const container = document.getElementById("historyList");
+
+let history = JSON.parse(localStorage.getItem("history")) || [];
+
+container.innerHTML = "";
+
+history.forEach(city => {
+
+const div = document.createElement("div");
+div.className = "history-item";
+div.innerText = city;
+
+div.onclick = () => updateWeather(city);
+
+container.appendChild(div);
+
+});
+
+}
+
+
+// Load history on start
+window.addEventListener("load", renderHistory);

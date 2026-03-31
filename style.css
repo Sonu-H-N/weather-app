@@ -277,3 +277,24 @@ font-size:12px;
 .fav-item:hover{
 background:rgba(255,255,255,0.4);
 }
+.history{
+margin-top:15px;
+}
+
+#historyList{
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+}
+
+.history-item{
+background:rgba(255,255,255,0.2);
+padding:6px 10px;
+border-radius:8px;
+cursor:pointer;
+font-size:12px;
+}
+
+.history-item:hover{
+background:rgba(255,255,255,0.4);
+}
