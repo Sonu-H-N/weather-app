@@ -298,3 +298,17 @@ font-size:12px;
 .history-item:hover{
 background:rgba(255,255,255,0.4);
 }
+.clear-btn{
+margin-top:8px;
+padding:5px 10px;
+border:none;
+border-radius:6px;
+font-size:12px;
+cursor:pointer;
+background:#ff6b6b;
+color:white;
+}
+
+.clear-btn:hover{
+background:#ff4d4d;
+}

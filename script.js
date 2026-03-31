@@ -173,3 +173,24 @@ container.appendChild(div);
 
 // Load history on start
 window.addEventListener("load", renderHistory);
+// 🧹 Clear Features
+
+function clearFavorites(){
+
+localStorage.removeItem("favorites");
+
+renderFavorites();
+
+showNotification("Favorites cleared");
+
+}
+
+function clearHistory(){
+
+localStorage.removeItem("history");
+
+renderHistory();
+
+showNotification("History cleared");
+
+}
