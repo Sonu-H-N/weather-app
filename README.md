@@ -1,21 +1,25 @@
-# weather-app
-Weather App using HTML, CSS, JavaScript and OpenWeather API
+# 🌤️ Weather Pro App
 
-# 🌤 Weather Pro App
-A modern animated weather application built using **HTML, CSS, and JavaScript** with beautiful UI effects and offline support.
+A modern and responsive weather application built using **HTML, CSS, and JavaScript**, powered by the **OpenWeather API**. The application provides real-time weather information with engaging animations, dark/light themes, offline support, and Progressive Web App (PWA) functionality.
 
-## 🚀 Features
-* ☀️ Smiling animated sun (light mode)
-* 🌙 Glowing moving moon (dark mode)
-* ⭐ Night stars animation
-* ☁️ Moving clouds
-* 🌧 Rain with thunder effects
-* 🌈 Rainbow after rain
-* 📊 Temperature chart
-* 🌗 Dark / Light mode toggle
-* 📱 Installable as Mobile App (PWA)
-* ⚡ Offline support
-* 🎨 Smooth animations
+---
+
+## ✨ Features
+
+- 🌦️ Real-time weather data using OpenWeather API
+- ☀️ Animated sun in light mode
+- 🌙 Glowing moon animation in dark mode
+- ⭐ Dynamic night sky with star animations
+- ☁️ Smooth moving cloud effects
+- 🌧️ Rainfall and thunderstorm animations
+- 🌈 Rainbow effect after rain
+- 📊 Interactive temperature visualization using Chart.js
+- 🌗 Dark and Light theme toggle
+- 📱 Progressive Web App (PWA) support
+- ⚡ Offline functionality through Service Workers
+- 🎨 Modern UI with smooth animations and transitions
+
+---
 
 ## 📸 Screenshots
 
@@ -26,22 +30,25 @@ A modern animated weather application built using **HTML, CSS, and JavaScript** 
 ![Dark Mode](screenshots/dark.png)
 
 ### Rain Effect
-![Rain](screenshots/rain.png)
+![Rain Effect](screenshots/rain.png)
 
-## 🛠 Technologies Used
-* HTML5
-* CSS3
-* JavaScript
-* Chart.js
-* Service Worker (PWA)
+---
+
+## 🛠️ Technologies Used
+
+- HTML5
+- CSS3
+- JavaScript (ES6+)
+- OpenWeather API
+- Chart.js
+- Service Workers
+- Progressive Web App (PWA)
+
+---
 
 ## 📦 Installation
-1. Clone repository
-2. Open index.html in browser
-3. Or install as app from browser menu
 
-## 🌍 Live Demo
-https://Sonu H-N.github.io/weather-app
+### Clone the Repository
 
-## 👨‍💻 Author
-Sonu H N
+```bash
+git clone https://github.com/Sonu-H-N/weather-app.git
