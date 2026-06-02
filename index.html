@@ -3,105 +3,143 @@
 
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Weather Pro</title>
+    <title>Weather Pro</title>
 
-<link rel="stylesheet" href="style.css">
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#4facfe">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4facfe">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
-<div id="notification" class="notification"></div>
+
 <body>
 
-<!-- Sky Effects -->
-<div class="sky-effects">
-<div class="sun" id="sun">
-<div class="sun-face">
-<div class="eye left-eye"></div>
-<div class="eye right-eye"></div>
-<div class="smile"></div>
-<div class="shooting-stars" id="shootingStars"></div>
-</div>
-</div>
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
 
-<div class="stars" id="stars"></div>
-<div class="moon" id="moon">🌙</div>
-</div>
+    <!-- Sky Effects -->
+    <div class="sky-effects">
 
-<div class="clouds">
-<div class="cloud cloud1"></div>
-<div class="cloud cloud2"></div>
-<div class="cloud cloud3"></div>
-</div>
+        <div class="sun" id="sun">
+            <div class="sun-face">
+                <div class="eye left-eye"></div>
+                <div class="eye right-eye"></div>
+                <div class="smile"></div>
+            </div>
+        </div>
 
-<div class="rain" id="rain"></div>
-<div class="lightning" id="lightning"></div>
-<div class="rainbow" id="rainbow"></div>
+        <div class="shooting-stars" id="shootingStars"></div>
 
-<!-- Main Card -->
+        <div class="stars" id="stars"></div>
 
-<div class="app">
+        <div class="moon" id="moon">🌙</div>
 
-<header>
+    </div>
 
-<h1>Weather Pro</h1>
+    <!-- Clouds -->
+    <div class="clouds">
+        <div class="cloud cloud1"></div>
+        <div class="cloud cloud2"></div>
+        <div class="cloud cloud3"></div>
+    </div>
 
-<button id="themeToggle">🌙</button>
+    <!-- Weather Effects -->
+    <div class="rain" id="rain"></div>
+    <div class="lightning" id="lightning"></div>
+    <div class="rainbow" id="rainbow"></div>
 
-</header>
+    <!-- Main App -->
+    <div class="app">
 
-<!-- Search -->
+        <!-- Header -->
+        <header>
 
-<<div class="search-box">
+            <h1>🌤️ Weather Pro</h1>
 
-<input id="cityInput" placeholder="Search city">
+            <button id="themeToggle">🌙</button>
 
-<button onclick="handleSearch()">Search</button>
+        </header>
 
-<button onclick="startVoiceSearch()">🎤</button>
-<button onclick="addFavorite()">⭐</button>
-<div class="history">
-    <button onclick="clearFavorites()" class="clear-btn">Clear Favorites</button>
-    <button onclick="clearHistory()" class="clear-btn">Clear History</button>
+        <!-- Search Box -->
+        <div class="search-box">
 
-<h3>🕒 Recent Searches</h3>
+            <input
+                id="cityInput"
+                type="text"
+                placeholder="Search city...">
 
-<div id="historyList"></div>
+            <button onclick="handleSearch()">Search</button>
 
-</div>
+            <button onclick="startVoiceSearch()">🎤</button>
 
-</div>
-<div id="loader" class="loader"></div>
+            <button onclick="addFavorite()">⭐</button>
 
-<!-- Weather -->
+        </div>
 
-<div class="weather-card">
+        <!-- History Section -->
+        <div class="history">
 
-<h2 id="cityName">City</h2>
+            <div class="history-buttons">
 
-<div class="temp" id="temperature">--°C</div>
+                <button onclick="clearFavorites()" class="clear-btn">
+                    Clear Favorites
+                </button>
 
-<p id="description">Weather condition</p>
+                <button onclick="clearHistory()" class="clear-btn">
+                    Clear History
+                </button>
 
-</div>
+            </div>
 
-<!-- Forecast -->
+            <h3>🕒 Recent Searches</h3>
 
-<div class="forecast" id="forecast"></div>
+            <div id="historyList"></div>
 
-<!-- Chart -->
+        </div>
 
-<canvas id="tempChart"></canvas>
+        <!-- Loader -->
+        <div id="loader" class="loader"></div>
 
-</div>
+        <!-- Weather Card -->
+        <div class="weather-card">
 
-<script src="script.js"></script>
+            <h2 id="cityName">City</h2>
+
+            <div class="temp" id="temperature">--°C</div>
+
+            <p id="description">Weather condition</p>
+
+        </div>
+
+        <!-- Forecast -->
+        <div class="forecast" id="forecast"></div>
+
+        <!-- Chart -->
+        <div class="chart-container">
+            <canvas id="tempChart"></canvas>
+        </div>
+
+    </div>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
 
 </body>
+
 </html>
