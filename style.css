@@ -2,29 +2,34 @@
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:'Times New Roman', Times, serif;
+font-family:'Poppins', sans-serif;
 }
 
 body{
-height:100vh;
+min-height:100vh;
 display:flex;
 justify-content:center;
-align-items:center;
+align-items:flex-start;
 background:linear-gradient(135deg,#4facfe,#00f2fe);
 color:white;
 transition:0.4s;
-overflow:hidden;
+overflow-x:hidden;
+overflow-y:auto;
+padding:30px 0;
 }
 
 /* APP CARD */
 
 .app{
 width:380px;
+max-width:92vw;
 padding:30px;
 border-radius:20px;
 background:rgba(255,255,255,0.15);
 backdrop-filter:blur(12px);
 box-shadow:0 10px 40px rgba(0,0,0,0.2);
+position:relative;
+z-index:1;
 }
 
 /* HEADER */
@@ -311,4 +316,239 @@ color:white;
 
 .clear-btn:hover{
 background:#ff4d4d;
+}
+
+/* WEATHER ICON */
+.weather-icon{
+font-size:48px;
+margin:8px 0;
+}
+
+/* WEATHER DETAILS GRID */
+.weather-details{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:8px;
+margin-top:14px;
+text-align:left;
+}
+
+.detail-item{
+background:rgba(255,255,255,0.15);
+padding:8px 10px;
+border-radius:10px;
+font-size:12px;
+}
+
+/* UNIT TOGGLE */
+.unit-toggle{
+margin-top:10px;
+padding:6px 14px;
+border:none;
+border-radius:10px;
+background:rgba(255,255,255,0.25);
+color:white;
+cursor:pointer;
+font-size:12px;
+}
+
+.unit-toggle:hover{
+background:rgba(255,255,255,0.4);
+}
+
+/* EMPTY HINT */
+.empty-hint{
+font-size:12px;
+opacity:0.7;
+}
+
+/* API SETTINGS */
+.api-settings{
+margin-top:18px;
+text-align:center;
+}
+
+#apiSettingsToggle{
+background:rgba(255,255,255,0.15);
+border:none;
+color:white;
+padding:8px 14px;
+border-radius:10px;
+cursor:pointer;
+font-size:13px;
+}
+
+#apiSettingsToggle:hover{
+background:rgba(255,255,255,0.3);
+}
+
+.api-settings-panel{
+margin-top:12px;
+background:rgba(0,0,0,0.25);
+padding:14px;
+border-radius:12px;
+text-align:left;
+font-size:12px;
+line-height:1.5;
+}
+
+.api-settings-panel a{
+color:#fff;
+text-decoration:underline;
+}
+
+.api-settings-panel input{
+width:100%;
+margin-top:8px;
+padding:8px;
+border:none;
+border-radius:8px;
+outline:none;
+font-size:12px;
+}
+
+.api-settings-buttons{
+display:flex;
+gap:8px;
+margin-top:8px;
+}
+
+.api-settings-buttons button{
+flex:1;
+padding:6px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+font-size:12px;
+}
+
+.api-settings-buttons button:first-child{
+background:#4facfe;
+color:white;
+}
+
+.api-settings-buttons button:first-child:hover{
+background:#2f9bff;
+}
+
+/* RAIN & LIGHTNING (referenced in HTML, previously unstyled) */
+.rain{
+position:fixed;
+top:0; left:0;
+width:100%; height:100%;
+pointer-events:none;
+opacity:0;
+transition:opacity 0.6s;
+z-index:-1;
+background-image:
+  linear-gradient(transparent, rgba(255,255,255,0.3) 60%, transparent);
+background-size:2px 60px;
+background-repeat:repeat;
+}
+
+.rain.active{
+animation:rainFall 0.5s linear infinite;
+}
+
+@keyframes rainFall{
+0%{background-position:0 0;}
+100%{background-position:20px 60px;}
+}
+
+.lightning{
+position:fixed;
+top:0; left:0;
+width:100%; height:100%;
+background:white;
+opacity:0;
+pointer-events:none;
+z-index:-1;
+}
+
+.lightning.active{
+animation:flash 6s infinite;
+}
+
+@keyframes flash{
+0%, 96%, 100%{opacity:0;}
+97%{opacity:0.4;}
+98%{opacity:0;}
+99%{opacity:0.3;}
+}
+
+.rainbow{
+position:fixed;
+top:10%; left:50%;
+transform:translateX(-50%);
+width:300px; height:150px;
+border-radius:150px 150px 0 0;
+border:8px solid;
+border-color:#ff595e #ffca3a #8ac926 #1982c4 transparent transparent;
+opacity:0;
+pointer-events:none;
+transition:opacity 1.5s;
+z-index:-1;
+}
+
+/* CLOUDS (referenced in HTML, previously unstyled) */
+.clouds{
+position:fixed;
+top:0; left:0;
+width:100%; height:100%;
+pointer-events:none;
+z-index:-2;
+overflow:hidden;
+}
+
+.cloud{
+position:absolute;
+width:120px; height:40px;
+background:rgba(255,255,255,0.5);
+border-radius:50px;
+filter:blur(2px);
+animation:drift linear infinite;
+}
+
+.cloud1{ top:15%; animation-duration:50s; }
+.cloud2{ top:35%; animation-duration:70s; width:90px; height:30px; }
+.cloud3{ top:55%; animation-duration:90s; width:150px; height:50px; }
+
+@keyframes drift{
+from{ left:-200px; }
+to{ left:110vw; }
+}
+
+.sky-effects{
+position:fixed;
+top:0; left:0;
+width:100%; height:100%;
+pointer-events:none;
+z-index:-2;
+}
+
+/* SUN FACE */
+.sun-face{
+position:relative;
+width:100%; height:100%;
+}
+
+.eye{
+position:absolute;
+width:6px; height:6px;
+background:#333;
+border-radius:50%;
+top:20px;
+}
+
+.left-eye{ left:18px; }
+.right-eye{ left:34px; }
+
+.smile{
+position:absolute;
+width:16px; height:8px;
+border:2px solid #333;
+border-top:none;
+border-radius:0 0 16px 16px;
+top:28px;
+left:20px;
 }
