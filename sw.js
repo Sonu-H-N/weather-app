@@ -1,8 +1,3 @@
-/* ==========================================================
-   Weather Pro — Service Worker
-   Cache-first offline support for the app shell
-   ========================================================== */
-
 const CACHE_NAME = "weather-app-v2";
 
 const urlsToCache = [
