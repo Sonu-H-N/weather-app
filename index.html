@@ -21,6 +21,7 @@
 
     <!-- PWA -->
     <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="icon.png">
     <meta name="theme-color" content="#4facfe">
 
     <!-- Chart.js -->
@@ -86,10 +87,16 @@
 
             <button onclick="handleSearch()">Search</button>
 
-            <button onclick="startVoiceSearch()">🎤</button>
+            <button onclick="startVoiceSearch()" title="Voice search">🎤</button>
 
-            <button onclick="addFavorite()">⭐</button>
+            <button onclick="addFavorite()" title="Add to favorites">⭐</button>
 
+        </div>
+
+        <!-- Favorites Section -->
+        <div class="favorites">
+            <h3>⭐ Favorites</h3>
+            <div id="favList"></div>
         </div>
 
         <!-- History Section -->
@@ -121,9 +128,15 @@
 
             <h2 id="cityName">City</h2>
 
-            <div class="temp" id="temperature">--°C</div>
+            <div class="weather-icon" id="weatherIcon">🌤️</div>
 
-            <p id="description">Weather condition</p>
+            <div class="temp" id="temperature">--°<span id="unitLabel">C</span></div>
+
+            <p id="description">Search for a city to get started</p>
+
+            <button id="unitToggle" class="unit-toggle">Switch to °F</button>
+
+            <div class="weather-details" id="weatherDetails"></div>
 
         </div>
 
@@ -133,6 +146,21 @@
         <!-- Chart -->
         <div class="chart-container">
             <canvas id="tempChart"></canvas>
+        </div>
+
+        <!-- API Key Settings -->
+        <div class="api-settings">
+            <button id="apiSettingsToggle">⚙️ API Key Settings</button>
+            <div id="apiSettingsPanel" class="api-settings-panel" style="display:none">
+                <p>Using <strong id="apiModeLabel">Demo Data</strong> mode. Add a free
+                    <a href="https://openweathermap.org/api" target="_blank" rel="noopener">OpenWeatherMap</a>
+                    API key below for live data.</p>
+                <input id="apiKeyInput" type="text" placeholder="Paste OpenWeatherMap API key...">
+                <div class="api-settings-buttons">
+                    <button onclick="saveApiKey()">Save Key</button>
+                    <button onclick="removeApiKey()" class="clear-btn">Remove Key</button>
+                </div>
+            </div>
         </div>
 
     </div>
