@@ -1,21 +1,26 @@
 {
   "name": "Weather Pro",
   "short_name": "Weather",
-  "start_url": ".",
+  "description": "Real-time weather with animated sky effects, forecasts, favorites, and offline support.",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#4facfe",
   "theme_color": "#4facfe",
   "orientation": "portrait",
+  "categories": ["weather", "utilities"],
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "icon.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
-      "src": "icon-512.png",
+      "src": "icon.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
