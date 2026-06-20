@@ -1,12 +1,13 @@
 /* ==========================================================
    Weather Pro — App Logic
-   Real OpenWeatherMap integration with graceful demo fallback
+   Real OpenWeatherMap integration (current + forecast + AQI)
+   with a deterministic offline demo mode fallback.
    ========================================================== */
 
 // ─── CONFIG ────────────────────────────────────────────────
 const OWM_BASE = "https://api.openweathermap.org/data/2.5";
 let unit = localStorage.getItem("unit") || "metric"; // metric = °C, imperial = °F
-let lastCityData = null; // cache last successful result for unit toggling
+let lastCityData = null; // cached result, reused for unit toggling
 let tempChartInstance = null;
 
 function getApiKey() {
@@ -19,29 +20,30 @@ function isDemoMode() {
 
 // ─── DEMO / MOCK DATA ──────────────────────────────────────
 // Used automatically when no API key is set, so the app is fully
-// functional and resume-demoable without any signup required.
+// functional and demoable without any signup or internet dependency.
 const DEMO_CONDITIONS = [
-  { main: "Clear", description: "clear sky", icon: "01d", emoji: "☀️" },
-  { main: "Clouds", description: "scattered clouds", icon: "03d", emoji: "⛅" },
-  { main: "Rain", description: "light rain", icon: "10d", emoji: "🌧️" },
-  { main: "Thunderstorm", description: "thunderstorm", icon: "11d", emoji: "⛈️" },
-  { main: "Snow", description: "light snow", icon: "13d", emoji: "❄️" },
-  { main: "Mist", description: "misty", icon: "50d", emoji: "🌫️" }
+  { description: "clear sky", icon: "01d", emoji: "☀️" },
+  { description: "scattered clouds", icon: "03d", emoji: "⛅" },
+  { description: "light rain", icon: "10d", emoji: "🌧️" },
+  { description: "thunderstorm", icon: "11d", emoji: "⛈️" },
+  { description: "light snow", icon: "13d", emoji: "❄️" },
+  { description: "misty", icon: "50d", emoji: "🌫️" }
 ];
 
-function hashCity(city) {
+function hashCity(str) {
   let h = 0;
-  for (let i = 0; i < city.length; i++) h = (h * 31 + city.charCodeAt(i)) >>> 0;
+  for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) >>> 0;
   return h;
 }
 
 function buildDemoData(city) {
-  const h = hashCity(city.toLowerCase().trim());
+  const key = city.toLowerCase().trim();
+  const h = hashCity(key);
   const cond = DEMO_CONDITIONS[h % DEMO_CONDITIONS.length];
-  const baseTemp = 10 + (h % 25); // 10–34 °C range, deterministic per city name
+  const baseTemp = 10 + (h % 25); // 10–34 °C, deterministic per city name
 
   const forecast = Array.from({ length: 5 }, (_, i) => {
-    const fh = hashCity(city.toLowerCase().trim() + i);
+    const fh = hashCity(key + "d" + i);
     const c = DEMO_CONDITIONS[fh % DEMO_CONDITIONS.length];
     const day = new Date();
     day.setDate(day.getDate() + i + 1);
@@ -53,27 +55,51 @@ function buildDemoData(city) {
     };
   });
 
+  const hourly = Array.from({ length: 8 }, (_, i) => {
+    const fh = hashCity(key + "h" + i);
+    const c = DEMO_CONDITIONS[fh % DEMO_CONDITIONS.length];
+    const t = new Date();
+    t.setHours(t.getHours() + i + 1, 0, 0, 0);
+    return {
+      label: t.getHours() === 0 ? "12am" : t.getHours() <= 12 ? `${t.getHours()}am` : `${t.getHours() - 12}pm`,
+      tempC: baseTemp + ((fh % 5) - 2),
+      emoji: c.emoji
+    };
+  });
+
+  const sunriseH = 5 + (h % 2);
+  const sunsetH = 18 + (h % 2);
+
   return {
     city: city.replace(/\b\w/g, c => c.toUpperCase()),
     tempC: baseTemp,
     feelsLikeC: baseTemp - 1 + (h % 3),
+    tempMaxC: baseTemp + 3 + (h % 3),
+    tempMinC: baseTemp - 4 - (h % 3),
     humidity: 40 + (h % 50),
     windSpeed: (h % 20) + 1,
     pressure: 1000 + (h % 30),
+    visibility: 6 + (h % 5),
     description: cond.description,
     emoji: cond.emoji,
+    sunrise: `${String(sunriseH).padStart(2, "0")}:${String((h % 6) * 10).padStart(2, "0")}`,
+    sunset: `${String(sunsetH).padStart(2, "0")}:${String((h % 6) * 10).padStart(2, "0")}`,
+    aqi: 1 + (h % 5),
     forecast,
+    hourly,
     isDemo: true
   };
 }
 
 // ─── REAL API FETCH ────────────────────────────────────────
-async function fetchRealWeather(city) {
+async function fetchRealWeather(cityOrCoords) {
   const key = getApiKey();
+  const isCoords = typeof cityOrCoords === "object";
+  const locParam = isCoords
+    ? `lat=${cityOrCoords.lat}&lon=${cityOrCoords.lon}`
+    : `q=${encodeURIComponent(cityOrCoords)}`;
 
-  const currentRes = await fetch(
-    `${OWM_BASE}/weather?q=${encodeURIComponent(city)}&units=metric&appid=${key}`
-  );
+  const currentRes = await fetch(`${OWM_BASE}/weather?${locParam}&units=metric&appid=${key}`);
   if (!currentRes.ok) {
     if (currentRes.status === 401) throw new Error("Invalid API key");
     if (currentRes.status === 404) throw new Error("City not found");
@@ -81,14 +107,18 @@ async function fetchRealWeather(city) {
   }
   const current = await currentRes.json();
 
-  const forecastRes = await fetch(
-    `${OWM_BASE}/forecast?q=${encodeURIComponent(city)}&units=metric&appid=${key}`
-  );
+  const forecastRes = await fetch(`${OWM_BASE}/forecast?${locParam}&units=metric&appid=${key}`);
   const forecastData = forecastRes.ok ? await forecastRes.json() : null;
 
-  // Pick one entry per day (~every 8th 3-hour slot) for a 5-day outlook
   let forecast = [];
+  let hourly = [];
   if (forecastData && forecastData.list) {
+    hourly = forecastData.list.slice(0, 8).map(entry => ({
+      label: new Date(entry.dt * 1000).toLocaleTimeString("en-US", { hour: "numeric" }).replace(" ", "").toLowerCase(),
+      tempC: Math.round(entry.main.temp),
+      emoji: iconToEmoji(entry.weather[0].icon)
+    }));
+
     const daily = forecastData.list.filter((_, i) => i % 8 === 4).slice(0, 5);
     forecast = daily.map(entry => ({
       day: new Date(entry.dt * 1000).toLocaleDateString("en-US", { weekday: "short" }),
@@ -98,18 +128,39 @@ async function fetchRealWeather(city) {
     }));
   }
 
+  let aqi = null;
+  try {
+    const aqiRes = await fetch(`${OWM_BASE}/air_pollution?lat=${current.coord.lat}&lon=${current.coord.lon}&appid=${key}`);
+    if (aqiRes.ok) {
+      const aqiData = await aqiRes.json();
+      aqi = aqiData.list?.[0]?.main?.aqi || null;
+    }
+  } catch (_) { /* AQI is a nice-to-have, fail silently */ }
+
   return {
     city: `${current.name}${current.sys?.country ? ", " + current.sys.country : ""}`,
     tempC: Math.round(current.main.temp),
     feelsLikeC: Math.round(current.main.feels_like),
+    tempMaxC: Math.round(current.main.temp_max),
+    tempMinC: Math.round(current.main.temp_min),
     humidity: current.main.humidity,
     windSpeed: Math.round(current.wind.speed),
     pressure: current.main.pressure,
+    visibility: current.visibility ? Math.round(current.visibility / 1000) : null,
     description: current.weather[0].description,
     emoji: iconToEmoji(current.weather[0].icon),
+    sunrise: formatUnixTime(current.sys.sunrise, current.timezone),
+    sunset: formatUnixTime(current.sys.sunset, current.timezone),
+    aqi,
     forecast,
+    hourly,
     isDemo: false
   };
+}
+
+function formatUnixTime(unixSeconds, tzOffsetSeconds) {
+  const d = new Date((unixSeconds + (tzOffsetSeconds || 0)) * 1000);
+  return d.toUTCString().slice(17, 22);
 }
 
 function iconToEmoji(icon) {
@@ -119,6 +170,14 @@ function iconToEmoji(icon) {
   };
   return map[icon.slice(0, 2)] || "🌤️";
 }
+
+const AQI_LABELS = {
+  1: { text: "Good", color: "#7ed957" },
+  2: { text: "Fair", color: "#c7e35a" },
+  3: { text: "Moderate", color: "#f5c542" },
+  4: { text: "Poor", color: "#f08a3c" },
+  5: { text: "Very Poor", color: "#e25555" }
+};
 
 // ─── UNIT CONVERSION ───────────────────────────────────────
 function toDisplayTemp(celsius) {
@@ -131,24 +190,28 @@ function unitSymbol() {
 }
 
 // ─── CORE: updateWeather ───────────────────────────────────
-async function updateWeather(city) {
-  city = (city || "").trim();
-  if (!city) {
-    showNotification("Please enter a city name");
-    return;
+async function updateWeather(cityOrCoords) {
+  const isCoords = typeof cityOrCoords === "object" && cityOrCoords !== null;
+  if (!isCoords) {
+    cityOrCoords = (cityOrCoords || "").trim();
+    if (!cityOrCoords) {
+      showNotification("Please enter a city name");
+      return;
+    }
   }
 
   showLoader();
 
   try {
-    const data = isDemoMode() ? buildDemoData(city) : await fetchRealWeather(city);
+    const data = isDemoMode()
+      ? buildDemoData(isCoords ? "Your Location" : cityOrCoords)
+      : await fetchRealWeather(cityOrCoords);
+
     lastCityData = data;
     renderWeather(data);
     applySkyEffects(data);
     renderChart(data);
-    showNotification(
-      (data.isDemo ? "Demo data for " : "Weather updated for ") + data.city
-    );
+    showNotification((data.isDemo ? "Demo data for " : "Weather updated for ") + data.city);
   } catch (err) {
     showNotification(err.message || "Could not fetch weather");
   } finally {
@@ -158,26 +221,72 @@ async function updateWeather(city) {
 
 function renderWeather(data) {
   document.getElementById("cityName").textContent = data.city;
+  document.getElementById("heroDate").textContent =
+    new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
   document.getElementById("weatherIcon").textContent = data.emoji;
-  document.getElementById("temperature").innerHTML =
-    `${toDisplayTemp(data.tempC)}°<span id="unitLabel">${unitSymbol()}</span>`;
+  document.getElementById("temperature").textContent = `${toDisplayTemp(data.tempC)}°`;
   document.getElementById("description").textContent =
     data.description.charAt(0).toUpperCase() + data.description.slice(1) +
-    (data.isDemo ? " (demo data)" : "");
+    (data.isDemo ? " · demo data" : "");
+  document.getElementById("tempHigh").textContent = `H: ${toDisplayTemp(data.tempMaxC)}°`;
+  document.getElementById("tempLow").textContent = `L: ${toDisplayTemp(data.tempMinC)}°`;
 
   document.getElementById("weatherDetails").innerHTML = `
-    <div class="detail-item">🌡️ Feels like ${toDisplayTemp(data.feelsLikeC)}°${unitSymbol()}</div>
-    <div class="detail-item">💧 Humidity ${data.humidity}%</div>
-    <div class="detail-item">💨 Wind ${data.windSpeed} ${unit === "imperial" ? "mph" : "m/s"}</div>
-    <div class="detail-item">🧭 Pressure ${data.pressure} hPa</div>
+    <div class="metric-tile">
+      <span class="metric-icon">🌡️</span>
+      <div class="metric-value">${toDisplayTemp(data.feelsLikeC)}°${unitSymbol()}</div>
+      <div class="metric-label">Feels like</div>
+    </div>
+    <div class="metric-tile">
+      <span class="metric-icon">💧</span>
+      <div class="metric-value">${data.humidity}%</div>
+      <div class="metric-label">Humidity</div>
+    </div>
+    <div class="metric-tile">
+      <span class="metric-icon">💨</span>
+      <div class="metric-value">${data.windSpeed} ${unit === "imperial" ? "mph" : "m/s"}</div>
+      <div class="metric-label">Wind</div>
+    </div>
+    <div class="metric-tile">
+      <span class="metric-icon">🧭</span>
+      <div class="metric-value">${data.pressure}</div>
+      <div class="metric-label">hPa</div>
+    </div>
   `;
 
-  const forecastEl = document.getElementById("forecast");
-  forecastEl.innerHTML = data.forecast.map(f => `
+  const aqi = AQI_LABELS[data.aqi] || null;
+  document.getElementById("sunAqiRow").innerHTML = `
+    <div class="info-card">
+      <div class="info-title">Sun</div>
+      <div class="sun-times">
+        <span>🌅 ${data.sunrise}</span>
+        <span>🌇 ${data.sunset}</span>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="info-title">Air quality</div>
+      ${aqi ? `
+        <div class="aqi-value">
+          <span class="aqi-number">${data.aqi}</span>
+          <span class="aqi-tag" style="background:${aqi.color}22;color:${aqi.color}">${aqi.text}</span>
+        </div>
+      ` : `<span class="empty-hint">Not available</span>`}
+    </div>
+  `;
+
+  document.getElementById("hourly").innerHTML = data.hourly.map(h => `
+    <div class="hourly-card">
+      <div class="h-time">${h.label}</div>
+      <div class="h-icon">${h.emoji}</div>
+      <div class="h-temp">${toDisplayTemp(h.tempC)}°</div>
+    </div>
+  `).join("");
+
+  document.getElementById("forecast").innerHTML = data.forecast.map(f => `
     <div class="forecast-card">
-      <div>${f.day}</div>
-      <div style="font-size:22px">${f.emoji}</div>
-      <div>${toDisplayTemp(f.tempC)}°${unitSymbol()}</div>
+      <div class="f-day">${f.day}</div>
+      <div class="f-icon">${f.emoji}</div>
+      <div class="f-temp">${toDisplayTemp(f.tempC)}°${unitSymbol()}</div>
     </div>
   `).join("");
 }
@@ -191,10 +300,14 @@ function applySkyEffects(data) {
   const lightning = document.getElementById("lightning");
   const rainbow = document.getElementById("rainbow");
 
+  // Respect a manual theme override if the user has set one; otherwise
+  // infer day/night from local time.
+  const manual = localStorage.getItem("manualTheme");
   const hour = new Date().getHours();
-  const isNight = hour < 6 || hour >= 19;
+  const isNight = manual ? manual === "night" : (hour < 6 || hour >= 19);
 
   document.body.classList.toggle("night", isNight);
+  document.getElementById("themeToggle").textContent = isNight ? "☀️" : "🌙";
   sun.style.opacity = isNight ? 0 : 1;
   moon.style.opacity = isNight ? 1 : 0;
   stars.style.opacity = isNight ? 1 : 0;
@@ -210,16 +323,11 @@ function applySkyEffects(data) {
   const isRain = condition.includes("rain") || condition.includes("drizzle");
   const isStorm = condition.includes("thunder");
 
-  rain.style.opacity = isRain || isStorm ? 1 : 0;
   rain.classList.toggle("active", isRain || isStorm);
+  rain.style.opacity = isRain || isStorm ? 1 : 0;
   lightning.classList.toggle("active", isStorm);
 
-  if (!isNight && !isRain && !isStorm) {
-    rainbow.style.opacity = condition.includes("clear") ? 0.0 : 0;
-  } else {
-    rainbow.style.opacity = 0;
-  }
-  // brief rainbow after rain clears, just for delight
+  rainbow.style.opacity = 0;
   if (isRain && Math.random() > 0.6) {
     setTimeout(() => { rainbow.style.opacity = 0.5; }, 1500);
     setTimeout(() => { rainbow.style.opacity = 0; }, 6000);
@@ -257,25 +365,26 @@ function renderChart(data) {
       datasets: [{
         label: `Temperature (°${unitSymbol()})`,
         data: temps,
-        borderColor: "#4facfe",
-        backgroundColor: "rgba(79,172,254,0.25)",
+        borderColor: "#f5a623",
+        backgroundColor: "rgba(245,166,35,0.18)",
         fill: true,
         tension: 0.4,
-        pointBackgroundColor: "#fff"
+        pointBackgroundColor: "#fff",
+        pointRadius: 4
       }]
     },
     options: {
       responsive: true,
-      plugins: { legend: { labels: { color: "#fff" } } },
+      plugins: { legend: { labels: { color: "#eef1f8", font: { family: "Inter" } } } },
       scales: {
-        x: { ticks: { color: "#fff" }, grid: { color: "rgba(255,255,255,0.1)" } },
-        y: { ticks: { color: "#fff" }, grid: { color: "rgba(255,255,255,0.1)" } }
+        x: { ticks: { color: "#eef1f8" }, grid: { color: "rgba(255,255,255,0.08)" } },
+        y: { ticks: { color: "#eef1f8" }, grid: { color: "rgba(255,255,255,0.08)" } }
       }
     }
   });
 }
 
-// ─── SEARCH / VOICE ────────────────────────────────────────
+// ─── SEARCH / VOICE / GEOLOCATION ──────────────────────────
 function handleSearch() {
   const city = document.getElementById("cityInput").value;
   updateWeather(city);
@@ -304,6 +413,22 @@ function startVoiceSearch() {
   };
 }
 
+function useMyLocation() {
+  if (!navigator.geolocation) {
+    showNotification("Geolocation not supported in this browser");
+    return;
+  }
+  showLoader();
+  navigator.geolocation.getCurrentPosition(
+    pos => updateWeather({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
+    () => {
+      hideLoader();
+      showNotification("Location access denied");
+    },
+    { timeout: 8000 }
+  );
+}
+
 // ─── LOADER ────────────────────────────────────────────────
 function showLoader() {
   document.getElementById("loader").style.display = "block";
@@ -320,9 +445,7 @@ function showNotification(message) {
   note.textContent = message;
   note.classList.add("show");
   clearTimeout(notificationTimeout);
-  notificationTimeout = setTimeout(() => {
-    note.classList.remove("show");
-  }, 3000);
+  notificationTimeout = setTimeout(() => note.classList.remove("show"), 3000);
 }
 
 // ─── SHOOTING STARS ────────────────────────────────────────
@@ -371,9 +494,7 @@ function renderFavorites() {
   const container = document.getElementById("favList");
   if (!container) return;
   let favs = JSON.parse(localStorage.getItem("favorites")) || [];
-  container.innerHTML = favs.length
-    ? ""
-    : '<span class="empty-hint">No favorites yet</span>';
+  container.innerHTML = favs.length ? "" : '<span class="empty-hint">None yet</span>';
 
   favs.forEach(city => {
     const div = document.createElement("div");
@@ -404,9 +525,7 @@ function renderHistory() {
   const container = document.getElementById("historyList");
   if (!container) return;
   let history = JSON.parse(localStorage.getItem("history")) || [];
-  container.innerHTML = history.length
-    ? ""
-    : '<span class="empty-hint">No recent searches</span>';
+  container.innerHTML = history.length ? "" : '<span class="empty-hint">None yet</span>';
 
   history.forEach(city => {
     const div = document.createElement("div");
@@ -434,8 +553,7 @@ function toggleTheme() {
 function toggleUnit() {
   unit = unit === "metric" ? "imperial" : "metric";
   localStorage.setItem("unit", unit);
-  document.getElementById("unitToggle").textContent =
-    unit === "metric" ? "Switch to °F" : "Switch to °C";
+  document.getElementById("unitToggle").textContent = unit === "metric" ? "°C" : "°F";
   if (lastCityData) {
     renderWeather(lastCityData);
     renderChart(lastCityData);
@@ -468,32 +586,44 @@ function updateApiModeLabel() {
   if (keyInput && getApiKey()) keyInput.value = getApiKey();
 }
 
+// ─── LIVE CLOCK ────────────────────────────────────────────
+function tickClock() {
+  const el = document.getElementById("liveClock");
+  if (!el) return;
+  el.textContent = new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
+}
+
 // ─── INIT ──────────────────────────────────────────────────
 window.addEventListener("load", () => {
   renderFavorites();
   renderHistory();
   updateApiModeLabel();
 
-  document.getElementById("unitToggle").textContent =
-    unit === "metric" ? "Switch to °F" : "Switch to °C";
+  document.getElementById("unitToggle").textContent = unit === "metric" ? "°C" : "°F";
 
   document.getElementById("themeToggle").addEventListener("click", toggleTheme);
   document.getElementById("unitToggle").addEventListener("click", toggleUnit);
+
   document.getElementById("apiSettingsToggle").addEventListener("click", () => {
     const panel = document.getElementById("apiSettingsPanel");
-    panel.style.display = panel.style.display === "none" ? "block" : "none";
+    const about = document.getElementById("aboutPanel");
+    about.hidden = true;
+    panel.hidden = !panel.hidden;
   });
+
+  document.getElementById("aboutToggle").addEventListener("click", () => {
+    const panel = document.getElementById("aboutPanel");
+    const settings = document.getElementById("apiSettingsPanel");
+    settings.hidden = true;
+    panel.hidden = !panel.hidden;
+  });
+
   document.getElementById("cityInput").addEventListener("keydown", e => {
     if (e.key === "Enter") handleSearch();
   });
 
-  // Restore manual theme preference if user toggled before, else fall back
-  // to time-of-day once a city is searched.
-  const manual = localStorage.getItem("manualTheme");
-  if (manual === "night") {
-    document.body.classList.add("night");
-    document.getElementById("themeToggle").textContent = "☀️";
-  }
+  tickClock();
+  setInterval(tickClock, 30000);
 
   // Show a default city on first load so the app never looks empty
   updateWeather("London");
