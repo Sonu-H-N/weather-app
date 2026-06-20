@@ -1,58 +1,58 @@
 # 🌤️ Weather Pro
 
-> A modern, animated weather dashboard built with vanilla HTML, CSS, and JavaScript. Works instantly with built-in demo data, or upgrade to live forecasts in one click by adding a free OpenWeatherMap API key.
+> A live weather dashboard with hourly and 5-day forecasts, air quality, sunrise/sunset, geolocation, and an animated day/night sky — built with vanilla HTML, CSS, and JavaScript. Fully functional out of the box with built-in demo data, or upgrade to live forecasts in one click with a free OpenWeatherMap API key.
 
-[![Live Demo](https://img.shields.io/badge/Open-Live%20Demo-4facfe?style=flat-square)](./index.html)
-[![PWA Ready](https://img.shields.io/badge/PWA-Installable-00f2fe?style=flat-square)](#pwa-support)
+[![Live Demo](https://img.shields.io/badge/Open-Live%20Demo-1b2a4a?style=flat-square)](./index.html)
+[![PWA Ready](https://img.shields.io/badge/PWA-Installable-f5a623?style=flat-square)](#pwa-support)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
 
 ---
 
 ## 📸 Overview
 
-Weather Pro is a polished, single-page weather application built as a portfolio / final-year project. It blends real weather data, dynamic sky animations, and a responsive glassmorphism UI — and it's fully functional the moment you open it, no API signup required, thanks to a built-in deterministic demo data mode.
+Weather Pro is a single-page weather application designed as a portfolio / final-year project. It pairs a real weather data layer with a dawn-to-dusk visual identity — a hero temperature readout, instrument-style metric tiles, and a sky that genuinely shifts with the time of day — rather than a generic dashboard template. It's fully usable the moment you open it, no signup required, thanks to a built-in deterministic demo data mode.
 
 ---
 
 ## ✨ Features
 
 ### 🌦️ Weather Data
-- **Dual-mode data layer** — uses live data from the OpenWeatherMap API when a key is provided, and falls back automatically to realistic, deterministic demo data otherwise (same city always returns the same demo weather, so it feels consistent)
-- Current conditions: temperature, "feels like", humidity, wind speed, and pressure
-- 5-day forecast strip with per-day icon and temperature
-- **°C / °F unit toggle** — instantly re-renders temperature, forecast, and chart
-- In-app **API key settings panel** — paste a free key to switch from demo to live data with no code changes, remove it any time to go back to demo mode
+- **Dual-mode data layer** — live data from the OpenWeatherMap API when a key is provided, with an automatic, deterministic demo-data fallback (the same city always returns the same demo conditions, so it stays consistent across a session)
+- Current conditions: temperature, "feels like," daily high/low, humidity, wind speed, pressure
+- **Hourly forecast** — next 8 hours at a glance
+- **5-day forecast** with per-day icon and temperature
+- **Air Quality Index** with a color-coded Good → Very Poor rating
+- **Sunrise / sunset** times
+- **°C / °F unit toggle** — instantly re-renders temperature, forecast, hourly strip, and chart
+
+### 📍 Location & Search
+- Text search by city name
+- 🎤 **Voice search** via the Web Speech API (graceful fallback notification if unsupported)
+- 📍 **"Use my location"** — one-tap geolocation lookup using the browser's Geolocation API
+- ⭐ **Favorites** and 🕒 **recent searches**, both one click to revisit
+- In-app **API key panel** — paste a free OpenWeatherMap key to switch from demo to live data instantly, remove it any time to fall back to demo mode
 
 ### 🎨 Animated Sky System
-- ☀️ Animated sun (with a friendly face) shown during the day
-- 🌙 Glowing moon that drifts across the sky at night
-- ⭐ Twinkling star field + periodic shooting stars at night
-- ☁️ Drifting cloud layer in the background
-- 🌧️ Rain animation triggered automatically when conditions include rain/drizzle
-- ⛈️ Lightning flash effect during thunderstorm conditions
-- 🌈 Rainbow effect that appears occasionally after rain
-- Day/night detection based on real local time, with a manual override toggle
-
-### 🔍 Search & Discovery
-- Text search by city name
-- 🎤 **Voice search** using the Web Speech API (falls back gracefully with a notification if unsupported)
-- ⭐ **Favorites** — save frequently checked cities, click to revisit instantly
-- 🕒 **Recent searches** — last 5 cities, deduplicated, most recent first
-- One-click **Clear Favorites** / **Clear History**
+- ☀️ Friendly animated sun during the day, 🌙 glowing moon at night, driven by real local time (with a manual override toggle)
+- ⭐ Twinkling star field and periodic shooting stars at night
+- ☁️ Drifting cloud layer
+- 🌧️ Rain animation, automatically triggered by rain/drizzle conditions
+- ⛈️ Lightning flashes during thunderstorms
+- 🌈 Occasional rainbow after rain clears
 
 ### 📊 Visualization
-- Interactive temperature trend chart (Chart.js) spanning current + 5-day forecast
-- Chart and forecast units automatically follow the °C/°F toggle
+- Interactive temperature trend chart (Chart.js) spanning current conditions through the 5-day forecast, following the active unit
 
-### 🌗 Theme & UX
-- Manual dark/light theme toggle (persisted across sessions)
-- In-app toast notifications for every action (search, favorites, errors, API key changes)
-- Loading spinner during fetches
-- Responsive glassmorphism card layout, scrollable on small screens
+### 🎛️ Interface
+- Instrument-panel layout: hero temperature readout, metric tiles, sun/AQI info cards, hourly strip, forecast strip, and chart, all in a clear visual hierarchy
+- Live clock in the header
+- Manual dark/light theme toggle, persisted across sessions
+- Toast notifications for every action
+- Responsive down to small phone widths, visible keyboard focus states, and respects `prefers-reduced-motion`
 
 ### 📱 PWA Support
 - Installable to home screen / desktop
-- Offline-capable app shell via a registered Service Worker (cache-first for static assets, network-first for live weather calls so data is never stale when online)
+- Offline-capable app shell via a registered Service Worker (cache-first for static assets, network-first for live weather calls)
 
 ---
 
@@ -61,11 +61,13 @@ Weather Pro is a polished, single-page weather application built as a portfolio 
 | Technology | Purpose |
 |---|---|
 | HTML5 | Semantic markup, PWA manifest link |
-| CSS3 | Custom animations, glassmorphism, responsive layout, dark/light themes |
+| CSS3 | Custom design system (CSS variables), animations, responsive layout |
 | Vanilla JavaScript (ES6+) | All app logic, no frameworks |
 | [Chart.js](https://www.chartjs.org/) | Temperature trend visualization |
-| [OpenWeatherMap API](https://openweathermap.org/api) | Live current weather + 5-day forecast (optional) |
+| [OpenWeatherMap API](https://openweathermap.org/api) | Live current weather, 5-day/3-hour forecast, and air pollution data (optional) |
 | Web Speech API | Voice-driven city search |
+| Geolocation API | "Use my location" weather lookup |
+| Google Fonts — Fraunces + Inter | Display/body type pairing |
 | localStorage | Favorites, history, theme, unit, and API key persistence |
 | Service Worker | PWA offline caching |
 
@@ -75,9 +77,9 @@ Weather Pro is a polished, single-page weather application built as a portfolio 
 
 ```
 weather-app/
-├── index.html       # App shell — search, weather card, forecast, chart, settings
-├── style.css         # Complete design system, animations, responsive styles
-├── script.js         # All app logic — data layer, effects, UI, PWA registration
+├── index.html       # App shell — masthead, search, hero readout, forecasts, settings
+├── style.css         # Complete design system: palette, type scale, layout, animations
+├── script.js         # All app logic — data layer, sky effects, UI rendering, PWA registration
 ├── sw.js              # Service worker (offline caching)
 ├── manifest.json      # PWA manifest (installable, standalone display)
 ├── icon.png            # App icon
@@ -95,7 +97,7 @@ weather-app/
 Double-click index.html   →   Opens in your default browser, demo mode active
 ```
 
-### Option 2 — Live Server (recommended, required for Service Worker)
+### Option 2 — Live Server (recommended, required for Service Worker + Geolocation)
 ```bash
 # VS Code extension
 Install "Live Server" → Right-click index.html → "Open with Live Server"
@@ -104,18 +106,12 @@ Install "Live Server" → Right-click index.html → "Open with Live Server"
 python -m http.server 8080
 # Then visit http://localhost:8080
 ```
-> Service workers require `http://` or `https://` — they won't register when opening the file directly from disk (`file://`).
+> Service workers and the Geolocation API both require `http://` or `https://` — they're unavailable when opening the file directly from disk (`file://`).
 
 ### Going live with real data
 1. Get a free API key at [openweathermap.org/api](https://openweathermap.org/api) (instant signup, free tier).
-2. Open the app, click **⚙️ API Key Settings**, paste the key, click **Save Key**.
-3. The app immediately switches from demo data to live forecasts — no reload needed.
-
----
-
-## ⌨️ Notes on Demo Mode
-
-When no API key is set, Weather Pro generates **deterministic demo data** — the same city name always produces the same temperature, condition, and forecast within a session, so the app feels stable and realistic for demos, screenshots, or offline grading without depending on an external API or internet connection.
+2. Open the app, click **⚙ Data source**, paste the key, click **Save key**.
+3. The app immediately switches from demo data to live conditions, forecasts, and air quality — no reload needed.
 
 ---
 
@@ -131,23 +127,23 @@ All data is stored in **localStorage**:
 | `manualTheme` | User's manual day/night override |
 | `owm_api_key` | OpenWeatherMap API key (only if provided) |
 
-**No data ever leaves your device** except the weather API call itself, which goes directly from your browser to OpenWeatherMap.
+**No data ever leaves your device** except the weather API calls themselves, which go directly from your browser to OpenWeatherMap.
 
 ---
 
 ## 🔮 Possible Extensions
 
-- 📍 Geolocation-based "weather near me" on load
 - 🗺️ Interactive map view with weather overlays
 - 🔔 Severe weather push notifications
-- 📅 Hourly forecast view in addition to daily
+- 📅 14-day extended forecast
 - 🌍 Multi-language support
+- 📈 Historical weather comparison
 
 ---
 
 ## 👨‍💻 Author
 
-**Sonu H N**  
+**Sonu H N**
 Passionate about web development and building smart tools that solve real problems.
 
 ---
