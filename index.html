@@ -5,15 +5,15 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Weather Pro — a live weather dashboard with hourly and 5-day forecasts, air quality, sunrise/sunset, and an animated day/night sky.">
 
-    <title>Weather Pro</title>
+    <title>Weather Pro — Live Forecast Dashboard</title>
 
-    <!-- Google Font -->
+    <!-- Google Fonts: Fraunces for the hero readout, Inter for UI -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
     <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap"
         rel="stylesheet">
 
     <!-- CSS -->
@@ -22,7 +22,7 @@
     <!-- PWA -->
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="icon.png">
-    <meta name="theme-color" content="#4facfe">
+    <meta name="theme-color" content="#1b2a4a">
 
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -35,8 +35,7 @@
     <div id="notification" class="notification"></div>
 
     <!-- Sky Effects -->
-    <div class="sky-effects">
-
+    <div class="sky-effects" aria-hidden="true">
         <div class="sun" id="sun">
             <div class="sun-face">
                 <div class="eye left-eye"></div>
@@ -44,124 +43,144 @@
                 <div class="smile"></div>
             </div>
         </div>
-
         <div class="shooting-stars" id="shootingStars"></div>
-
         <div class="stars" id="stars"></div>
-
-        <div class="moon" id="moon">🌙</div>
-
+        <div class="moon" id="moon"></div>
     </div>
 
-    <!-- Clouds -->
-    <div class="clouds">
+    <div class="clouds" aria-hidden="true">
         <div class="cloud cloud1"></div>
         <div class="cloud cloud2"></div>
         <div class="cloud cloud3"></div>
     </div>
 
-    <!-- Weather Effects -->
-    <div class="rain" id="rain"></div>
-    <div class="lightning" id="lightning"></div>
-    <div class="rainbow" id="rainbow"></div>
+    <div class="rain" id="rain" aria-hidden="true"></div>
+    <div class="lightning" id="lightning" aria-hidden="true"></div>
+    <div class="rainbow" id="rainbow" aria-hidden="true"></div>
 
     <!-- Main App -->
     <div class="app">
 
-        <!-- Header -->
-        <header>
-
-            <h1>🌤️ Weather Pro</h1>
-
-            <button id="themeToggle">🌙</button>
-
+        <!-- Masthead -->
+        <header class="masthead">
+            <div class="brand">
+                <span class="brand-mark">WP</span>
+                <div class="brand-text">
+                    <h1>Weather Pro</h1>
+                    <span class="brand-sub" id="liveClock">—</span>
+                </div>
+            </div>
+            <div class="masthead-actions">
+                <button id="unitToggle" class="pill-btn" title="Toggle units">°C</button>
+                <button id="themeToggle" class="icon-btn" title="Toggle theme">🌙</button>
+            </div>
         </header>
 
         <!-- Search Box -->
         <div class="search-box">
-
-            <input
-                id="cityInput"
-                type="text"
-                placeholder="Search city...">
-
-            <button onclick="handleSearch()">Search</button>
-
-            <button onclick="startVoiceSearch()" title="Voice search">🎤</button>
-
-            <button onclick="addFavorite()" title="Add to favorites">⭐</button>
-
+            <input id="cityInput" type="text" placeholder="Search a city…" autocomplete="off">
+            <button class="icon-btn" onclick="handleSearch()" title="Search">🔍</button>
+            <button class="icon-btn" onclick="startVoiceSearch()" title="Voice search">🎤</button>
+            <button class="icon-btn" onclick="useMyLocation()" title="Use my location">📍</button>
+            <button class="icon-btn" onclick="addFavorite()" title="Add to favorites">⭐</button>
         </div>
 
-        <!-- Favorites Section -->
-        <div class="favorites">
-            <h3>⭐ Favorites</h3>
-            <div id="favList"></div>
-        </div>
-
-        <!-- History Section -->
-        <div class="history">
-
-            <div class="history-buttons">
-
-                <button onclick="clearFavorites()" class="clear-btn">
-                    Clear Favorites
-                </button>
-
-                <button onclick="clearHistory()" class="clear-btn">
-                    Clear History
-                </button>
-
+        <!-- Favorites + History row -->
+        <div class="chip-row">
+            <div class="chip-group">
+                <span class="chip-label">Favorites</span>
+                <div id="favList" class="chip-list"></div>
             </div>
-
-            <h3>🕒 Recent Searches</h3>
-
-            <div id="historyList"></div>
-
+            <div class="chip-group">
+                <span class="chip-label">Recent</span>
+                <div id="historyList" class="chip-list"></div>
+            </div>
+        </div>
+        <div class="chip-actions">
+            <button onclick="clearFavorites()" class="text-btn">Clear favorites</button>
+            <button onclick="clearHistory()" class="text-btn">Clear recent</button>
         </div>
 
         <!-- Loader -->
         <div id="loader" class="loader"></div>
 
-        <!-- Weather Card -->
-        <div class="weather-card">
+        <!-- Hero Readout -->
+        <section class="hero-readout">
+            <div class="hero-top">
+                <div>
+                    <h2 id="cityName">—</h2>
+                    <p class="hero-date" id="heroDate">—</p>
+                </div>
+                <div class="weather-icon" id="weatherIcon">—</div>
+            </div>
 
-            <h2 id="cityName">City</h2>
+            <div class="hero-temp-row">
+                <div class="hero-temp" id="temperature">--°</div>
+                <p class="hero-desc" id="description">Search a city or use your location to begin</p>
+            </div>
 
-            <div class="weather-icon" id="weatherIcon">🌤️</div>
+            <div class="hero-range">
+                <span id="tempHigh">H: --°</span>
+                <span class="dot">·</span>
+                <span id="tempLow">L: --°</span>
+            </div>
+        </section>
 
-            <div class="temp" id="temperature">--°<span id="unitLabel">C</span></div>
+        <!-- Metric tiles -->
+        <section class="metrics-grid" id="weatherDetails"></section>
 
-            <p id="description">Search for a city to get started</p>
+        <!-- Sun & AQI strip -->
+        <section class="sun-aqi-row" id="sunAqiRow"></section>
 
-            <button id="unitToggle" class="unit-toggle">Switch to °F</button>
+        <!-- Hourly forecast -->
+        <section class="section-block">
+            <h3 class="section-title">Hourly forecast</h3>
+            <div class="hourly-row" id="hourly"></div>
+        </section>
 
-            <div class="weather-details" id="weatherDetails"></div>
-
-        </div>
-
-        <!-- Forecast -->
-        <div class="forecast" id="forecast"></div>
+        <!-- 5-day forecast -->
+        <section class="section-block">
+            <h3 class="section-title">5-day forecast</h3>
+            <div class="forecast" id="forecast"></div>
+        </section>
 
         <!-- Chart -->
-        <div class="chart-container">
-            <canvas id="tempChart"></canvas>
-        </div>
+        <section class="section-block">
+            <h3 class="section-title">Temperature trend</h3>
+            <div class="chart-container">
+                <canvas id="tempChart"></canvas>
+            </div>
+        </section>
 
-        <!-- API Key Settings -->
-        <div class="api-settings">
-            <button id="apiSettingsToggle">⚙️ API Key Settings</button>
-            <div id="apiSettingsPanel" class="api-settings-panel" style="display:none">
-                <p>Using <strong id="apiModeLabel">Demo Data</strong> mode. Add a free
+        <!-- Settings / About -->
+        <section class="section-block">
+            <div class="settings-tabs">
+                <button id="apiSettingsToggle" class="text-btn">⚙ Data source</button>
+                <button id="aboutToggle" class="text-btn">ℹ About</button>
+            </div>
+
+            <div id="apiSettingsPanel" class="panel" hidden>
+                <p>Currently showing <strong id="apiModeLabel">Demo Data</strong>. Add a free
                     <a href="https://openweathermap.org/api" target="_blank" rel="noopener">OpenWeatherMap</a>
-                    API key below for live data.</p>
-                <input id="apiKeyInput" type="text" placeholder="Paste OpenWeatherMap API key...">
-                <div class="api-settings-buttons">
-                    <button onclick="saveApiKey()">Save Key</button>
-                    <button onclick="removeApiKey()" class="clear-btn">Remove Key</button>
+                    API key for live conditions worldwide.</p>
+                <input id="apiKeyInput" type="text" placeholder="Paste OpenWeatherMap API key…">
+                <div class="panel-buttons">
+                    <button onclick="saveApiKey()" class="solid-btn">Save key</button>
+                    <button onclick="removeApiKey()" class="text-btn">Remove key</button>
                 </div>
             </div>
-        </div>
+
+            <div id="aboutPanel" class="panel" hidden>
+                <p>Weather Pro is a self-contained dashboard: city search, hourly and 5-day
+                    forecasts, air quality, sunrise/sunset, geolocation, voice search, and an
+                    animated day/night sky — built with plain HTML, CSS, and JavaScript and
+                    installable as a Progressive Web App.</p>
+            </div>
+        </section>
+
+        <footer class="app-footer">
+            <span>Weather Pro · Built by Sonu H N</span>
+        </footer>
 
     </div>
 
